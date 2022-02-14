@@ -8,7 +8,8 @@
 - ローカルサーバ起動
 - ソースコードの監視
 - ソースコードのビルド
-  - SCSS->CSS（dart-sass）
+  - PostCSS による CSS 生成
+    - [Tailwind CSS](https://tailwindcss.com/)をベースにしています。
   - Javascript（esbuild）
 - 画像の最適化
 - SVG 形式のアイコンを SVG スプライトにまとめる
@@ -24,9 +25,14 @@
 
 1.  `npm ci` （依存パッケージのインストール）
 2.  `cp .env.example .env` -> .env を編集する
-3.  `docker-compose up -d` （Docker を起動）
-4.  `docker-compose exec -w /var/www/html/project wordpress bash -c 'bash setup.sh'` （Docker で開発環境作成）
-5.  `npm run start`
+3.  `docker compose up -d` （Docker を起動）
+4.  `docker compose exec -w /var/www/html/web wordpress bash -c 'bash setup.sh'` （Docker で開発環境作成）
+5.  phpMyAdmin（ http://localhost:3307 ）を開き、データベースをインポート
+6.  options テーブルの home と site_url のドメインを`http://localhost:8080`に変更
+
+※ ポート番号は.env で設定した値にすること。
+
+完了したら、`npm run start`で開発モードが起動します。
 
 ## コマンド
 
@@ -34,42 +40,53 @@
 
 `npm run start`
 
-ローカルサーバを起動し、ソースコードを監視しながら変更を検知してビルドします。ソースマップを出力します。
+ソースコードを監視しながら変更を検知してブラウザのオートリロードを行います。ソースマップを出力します。
 
 ### ビルド
 
-`npm run build`
+`npm run build --prefix theme`
 
 本番モードでビルドします。ソースマップは出力されません。
 
 ## ディレクトリ構造
 
 ```
-config/ 各コンテナで使う設定ファイル
-  wordmove/
-    movefile.yml
-  wordpress/
-    000-default.conf
-    Dockerfile
-    php.ini
-project/ Wordpressコンテナでマウントするディレクトリ
-  mu-plugins/
-  plugins/
-  public/ ドキュメントルート
-    wp/ Wordpress本体
-    wp-config.php
-  themes/
-  composer.json Wordpress本体やプラグインの依存設定
-  setup.sh Wordpressのインストールなどを行うシェルスクリプト
-sources/
-  icons/ SVGスプライトにまとめるアイコン
-  images/
-  scripts/
-  styles/
-config.js テーマまでのパスなどの設定ファイル
-docker-compose.yml
-gulpfile.js
-package.json
+.
+├── config
+│    └── wordpress
+│          ├── 000-default.conf
+│          └── php.ini
+├── docker
+│    └── wordpress
+│          └── Dockerfile
+├── themes
+│    ├── assets # ビルドされた静的ファイル
+│    ├── src # ビルドする静的ファイル
+│    │        ├── icons
+│    │        ├── images
+│    │        ├── scripts
+│    │        └── styles
+│    ├── templates # テンプレートファイル
+│    ├── functions.php
+│    ├── gulpfile.js
+│    ├── index.php
+│    ├── package.json
+│    ├── style.css
+│    └── tailwind.config.js
+├── web # wordpressコンテナで使うソースコード
+│    ├── mu-plugins
+│    ├── public
+│    │    └── wp-config.php
+│    ├── composer.json
+│    ├── phpcs.xml
+│    ├── setup.sh # wordpressコンテナのセットアップスクリプト
+│    └── wp-cli.yml
+├── .env
+├── .env.example
+├── .gitignore
+├── docker-compose.yml
+├── package.json
+└── README.md
 ```
 
 ## テーマについて

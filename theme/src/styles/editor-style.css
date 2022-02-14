@@ -1,0 +1,8 @@
+@import 'modules/_entry.css';
+
+#editor {
+  .editor-post-title__input,
+  .editor-styles-wrapper {
+    @apply font-sans;
+  }
+}

@@ -1,0 +1,63 @@
+/* フォーム */
+.smf-form {
+  @apply grid gap-6 text-sm font-medium;
+}
+
+.smf-item {
+  @apply grid lg:grid-cols-[auto_61.25%] gap-3;
+}
+
+.smf-item__label__text {
+  @apply py-2;
+
+  @screen sm {
+    em {
+      @apply mr-2;
+    }
+  }
+
+  @screen lg {
+    @apply relative block pl-10;
+
+    /* 必須ラベル */
+    em {
+      @apply absolute left-0;
+    }
+  }
+}
+
+.smf-text-control__control,
+.smf-textarea-control__control {
+  @apply w-full p-2 text-base border border-neutral-350 rounded;
+}
+
+.smf-action {
+  @apply mt-8 lg:mt-16 flex justify-center;
+
+  .smf-button-control__control {
+    /* デフォルトのプロパティをリセット */
+    background-image: none;
+    border: none;
+    border-radius: 0;
+
+    @apply block px-10 w-full h-16 flex items-center justify-center font-bold whitespace-nowrap transition-opacity duration-200 hover:opacity-75;
+
+    /* 確認、送信ボタン */
+    &[data-action='confirm'],
+    &[data-action='complete'] {
+      @apply text-white bg-primary-light;
+    }
+
+    /* 戻るボタン */
+    &[data-action='back'] {
+      @apply bg-neutral-300;
+    }
+  }
+}
+
+.smf-button-control {
+  /* 右側に並ぶボタンだけ大きくする */
+  &:last-of-type {
+    @apply flex-grow max-w-xs;
+  }
+}

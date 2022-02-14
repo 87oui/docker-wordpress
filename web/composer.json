@@ -1,0 +1,60 @@
+{
+  "name": "87oui/wordpress",
+  "type": "project",
+  "license": "MIT",
+  "description": "",
+  "config": {
+    "vendor-dir": "public/vendor/"
+  },
+  "repositories": {
+    "87oui/jun": {
+      "type": "vcs",
+      "url": "https://github.com/87oui/jun"
+    },
+    "0": {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    }
+  },
+  "require": {
+    "composer/installers": "^1.4",
+    "johnpbloch/wordpress": "^5.7",
+    "vlucas/phpdotenv": "^5.2",
+    "87oui/jun": "^1.0"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.6",
+    "wp-coding-standards/wpcs": "^2.3"
+  },
+  "extra": {
+    "wordpress-install-dir": "public/wp",
+    "installer-paths": {
+      "plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ],
+      "themes/{$name}/": [
+        "type:wordpress-theme"
+      ]
+    }
+  },
+  "scripts": {
+    "link": [
+      "rm -rf public/wp/wp-content/themes",
+      "ln -s ../../../themes public/wp/wp-content/",
+      "rm -rf public/wp/wp-content/plugins",
+      "ln -s ../../../plugins public/wp/wp-content/",
+      "rm -rf public/wp/wp-content/mu-plugins",
+      "ln -s ../../../mu-plugins public/wp/wp-content/"
+    ],
+    "post-install-cmd": [
+      "@link",
+      "./public/vendor/bin/phpcs --config-set installed_paths public/vendor/wp-coding-standards/wpcs",
+      "composer install -d themes/jun --no-dev"
+    ],
+    "test": [
+      "@format",
+      "phpcs"
+    ],
+    "format": "phpcbf"
+  }
+}

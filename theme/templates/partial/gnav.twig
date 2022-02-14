@@ -1,0 +1,22 @@
+<button id="gnav-toggle" class="gnav-toggle" aria-label="メニュー">
+  <span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </span>
+</button>
+<nav class="gnav" role="navigation">
+  <ul class="" itemscope="" itemtype="http://www.schema.org/SiteNavigationElement">
+    {% for item in menu.items %}
+      <li class="{{ item.classes|join(' ') }}" itemprop="name">
+        <a
+          href="{{ item.link == '/' ? site.url : item.link }}"
+          class=""
+          target="{{ item.target }}"
+          itemprop="URL">
+          {{ item.title }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

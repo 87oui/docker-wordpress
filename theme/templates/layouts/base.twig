@@ -1,0 +1,29 @@
+<!doctype html>
+<html {{ site.language_attributes }}>
+  <head>
+    <meta charset="{{ site.charset }}" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width">
+    <meta name="keywords" content="" />
+    <link rel="author" href="{{ site.theme.link }}/humans.txt" />
+    <link rel="pingback" href="{{ site.pingback_url }}" />
+    <link rel="profile" href="http://gmpg.org/xfn/11">
+    <link rel="icon" href="{{ theme.link }}/assets/favicons/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ theme.link }}/assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ theme.link }}/assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ theme.link }}/assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="{{ theme.link }}/assets/favicons/site.webmanifest">
+    {{ function('wp_head') }}
+  </head>
+
+  <body class="{{ body_class }}" data-gnav-show="false">
+    {% include 'partial/header.twig' %}
+
+    {% block content %}{% endblock %}
+
+    {% include 'partial/footer.twig' %}
+
+    {{ function('wp_footer') }}
+  </body>
+</html>

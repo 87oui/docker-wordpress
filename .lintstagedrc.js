@@ -1,5 +1,13 @@
 module.exports = {
-  '*.scss': ['prettier --write', 'stylelint --fix'],
-  '*.js': ['prettier --write', 'eslint --fix'],
-  '!(*-lock).{json,md}': ['prettier --write'],
+  '*.css': [
+    './theme/node_modules/.bin/prettier --config ./theme/.prettierrc.js --write',
+    './theme/node_modules/.bin/stylelint --config ./theme/.stylelintrc.js --fix',
+  ],
+  '*.js': [
+    './theme/node_modules/.bin/prettier --config ./theme/.prettierrc.js --write',
+    './theme/node_modules/.bin/eslint -c ./theme/.eslintrc.js --fix',
+  ],
+  '!(*-lock).{json,md}': [
+    './theme/node_modules/.bin/prettier --config ./theme/.prettierrc.js --write',
+  ],
 };

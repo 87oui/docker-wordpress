@@ -1,0 +1,23 @@
+.entry-content,
+.editor-styles-wrapper {
+  @apply text-sm font-sans;
+
+  > * {
+    @apply mt-8;
+  }
+
+  a {
+    @apply text-primary-light underline;
+
+    &:hover {
+      @apply no-underline;
+    }
+  }
+}
+
+/* フォーム 必須ラベル */
+.smf-item__label__text {
+  em {
+    @apply inline-block px-1 text-white text-xs not-italic bg-secondary rounded;
+  }
+}

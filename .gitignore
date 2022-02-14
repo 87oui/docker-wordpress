@@ -1,32 +1,16 @@
 # dotenv
 .env
 
-# コンパイル後
-project/themes/*/assets/styles/
-project/themes/*/assets/scripts/
-project/themes/*/assets/images/
-
-# Wordpress本体
-project/public/wp
-project/public/.htaccess
-project/public/index.php
-project/plugins/*
-!project/plugins/.gitkeep
-
 # 依存パッケージ
 node_modules/
-vendor/
 
-# Logs and databases
+# Logs
 logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
-*.sql
 
 # Cache
 .npm
-.eslintcache
-.sass-cache/

@@ -1,0 +1,23 @@
+{% if breadcrumbs %}
+  <div class="">
+    <ol class="" itemscope itemtype="http://schema.org/BreadcrumbList">
+      {% for breadcrumb in breadcrumbs %}
+        <li class="" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          {% if not loop.first %}
+            <span class="inline-block mx-2 text-neutral-350">＞</span>
+          {% endif %}
+          {% if breadcrumb.link %}
+            <a itemscope itemtype="http://schema.org/Thing" itemprop="item" href="{{ breadcrumb.link }}">
+              <span itemprop="name">{{ breadcrumb.title }}</span>
+            </a>
+          {% else %}
+            <span itemscope itemtype="http://schema.org/Thing" itemprop="item">
+              <span itemprop="name">{{ breadcrumb.title }}</span>
+            </span>
+          {% endif %}
+          <meta itemprop="position" content="{{ loop.index }}"/>
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+{% endif %}

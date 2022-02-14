@@ -1,0 +1,113 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import 'modules/_entry.css';
+@import 'modules/_form.css';
+
+body {
+  @apply text-neutral-800 leading-relaxed bg-white;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+svg {
+  fill: currentcolor;
+}
+
+/* ヘッダ */
+[data-gnav-show='true'] .header {
+  @apply bg-primary;
+}
+
+/* パームトップ版ナビゲーションの切り替えボタン */
+.gnav-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+
+  > span {
+    position: relative;
+    width: 25px;
+    height: 20px;
+
+    > span {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      margin: auto;
+      background-color: currentcolor;
+      transition: 0.5s ease-out;
+
+      &:nth-child(1) {
+        top: 0;
+      }
+
+      &:nth-child(2) {
+        top: 0;
+        bottom: 0;
+      }
+
+      &:nth-child(3) {
+        bottom: 0;
+      }
+    }
+  }
+}
+
+[data-gnav-show='true'] .gnav-toggle > span > span {
+  &:nth-child(1) {
+    transform: translateY(8.5px) rotate(-45deg);
+  }
+
+  &:nth-child(2) {
+    opacity: 0;
+  }
+
+  &:nth-child(3) {
+    transform: translateY(-8.5px) rotate(45deg);
+  }
+}
+
+/* グローバルナビゲーション */
+.gnav {
+  @screen sm {
+    z-index: -1;
+    height: 0;
+    overflow: scroll;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s linear;
+
+    [data-gnav-show='true'] & {
+      z-index: 1;
+      height: 100vh;
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+
+/* アイコン */
+.inline-icon {
+  @apply inline-block aspect-square align-baseline;
+}
+
+/* リスト */
+.list-disc,
+.list-decimal {
+  padding-left: 1.5em;
+}
+
+.list-note {
+  padding-left: 1em;
+  list-style-type: '※';
+}
+
+/* 投稿 */
+.entry-content {
+  @apply flow-root;
+}
