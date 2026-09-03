@@ -1,14 +1,9 @@
-version: '3'
 services:
   database:
-    container_name: '${PRODUCTION_NAME}_database'
-    image: mysql:5.7
-    command:
-      - '--character-set-server=utf8'
-      - '--collation-server=utf8_unicode_ci'
+    container_name: ${PROJECT_NAME}_database
+    image: mariadb:11.4
     ports:
-      - '${LOCAL_DB_PORT}:3306'
-    restart: on-failure:5
+      - ${LOCAL_DB_PORT}:3306
     volumes:
       - db_data:/var/lib/mysql
     environment:
@@ -16,54 +11,59 @@ services:
       MYSQL_DATABASE: wordpress
       MYSQL_PASSWORD: wordpress
       MYSQL_ROOT_PASSWORD: wordpress
+      MARIADB_AUTO_UPGRADE: '1'
   wordpress:
-    container_name: '${PRODUCTION_NAME}_wordpress'
+    container_name: ${PROJECT_NAME}_wordpress
     depends_on:
       - database
+      - mailpit
     build:
       context: ./docker/wordpress
     tty: true
-    restart: always
     ports:
-      - '${LOCAL_SERVER_PORT}:80'
-    restart: on-failure:5
-    working_dir: /var/www/html/web/public/wp
+      - ${LOCAL_SERVER_PORT}:80
+    working_dir: /var/www/html/public_html/wp
     volumes:
-      - ./config/wordpress/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
-      - ./config/wordpress/php.ini:/usr/local/etc/php/php.ini
-      - ./web/mu-plugins:/var/www/html/web/mu-plugins
-      - ./web/public/wp-config.php:/var/www/html/web/public/wp-config.php
-      - ./theme:/var/www/html/web/themes/jun-child
-      - ./web/composer.json:/var/www/html/web/composer.json
-      - ./web/composer.lock:/var/www/html/web/composer.lock
-      - ./web/phpcs.xml:/var/www/html/web/phpcs.xml
-      - ./web/setup.sh:/var/www/html/web/setup.sh
-      - ./web/wp-cli.yml:/var/www/html/web/wp-cli.yml
+      - ./mu-plugins:/var/www/html/mu-plugins
+      - ./theme:/var/www/html/themes/${PROJECT_NAME}
+      - ./docker/wordpress/mount:/var/www/html/mount
+      - ~/.ssh:/root/.ssh
     environment:
       DB_NAME: wordpress
       DB_USER: wordpress
       DB_PASSWORD: wordpress
       DB_HOST: database:3306
-      WP_ENV: development
-      TZ: Asia/Tokyo
-  phpmyadmin:
-    container_name: '${PRODUCTION_NAME}_phpmyadmin'
-    depends_on:
-      - database
-    image: phpmyadmin
-    restart: always
+      PROJECT_NAME: ${PROJECT_NAME}
+      PLUGIN_ACF_KEY: ${PLUGIN_ACF_KEY}
+      WP_ENVIRONMENT_TYPE: local
+      LOCAL_SERVER_PORT: '${LOCAL_SERVER_PORT}'
+      PRODUCTION_HOST: '${PRODUCTION_HOST}'
+      PRODUCTION_DIR_PATH: '${PRODUCTION_DIR_PATH}'
+      PRODUCTION_SSH_HOST: '${PRODUCTION_SSH_HOST}'
+      PRODUCTION_DB_NAME: '${PRODUCTION_DB_NAME}'
+      PRODUCTION_DB_USER: '${PRODUCTION_DB_USER}'
+      PRODUCTION_DB_PASSWORD: '${PRODUCTION_DB_PASSWORD}'
+      PRODUCTION_DB_HOST: '${PRODUCTION_DB_HOST}'
+      STAGING_HOST: '${STAGING_HOST}'
+      STAGING_DIR_PATH: '${STAGING_DIR_PATH}'
+      STAGING_SSH_HOST: '${STAGING_SSH_HOST}'
+      STAGING_DB_NAME: '${STAGING_DB_NAME}'
+      STAGING_DB_USER: '${STAGING_DB_USER}'
+      STAGING_DB_PASSWORD: '${STAGING_DB_PASSWORD}'
+      STAGING_DB_HOST: '${STAGING_DB_HOST}'
+  mailpit:
+    image: axllent/mailpit
+    container_name: ${PROJECT_NAME}_mailpit
+    restart: unless-stopped
+    volumes:
+      - ./mailpit:/data
     ports:
-      - '${LOCAL_PMA_PORT}:80'
+      - ${LOCAL_MAILPIT_PORT}:8025
+      - 1025:1025
     environment:
-      PMA_USER: wordpress
-      PMA_PASSWORD: wordpress
-      PMA_HOST: database:3306
-      PMA_ARBITRARY: 1
-  mailhog:
-    container_name: '${PRODUCTION_NAME}_mailhog'
-    image: mailhog/mailhog
-    ports:
-      - '${LOCAL_SMTP_PORT}:1025' # smtp server
-      - '${LOCAL_MAILHOG_PORT}:8025' # web ui
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
 volumes:
   db_data:

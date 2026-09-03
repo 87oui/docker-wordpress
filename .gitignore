@@ -1,16 +1,9 @@
-# dotenv
 .env
-
-# 依存パッケージ
 node_modules/
 
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
+auth.json
 
-# Cache
-.npm
+theme/assets
+theme/blocks
+
+mailpit/

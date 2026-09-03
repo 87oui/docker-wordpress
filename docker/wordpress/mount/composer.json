@@ -1,0 +1,98 @@
+{
+  "name": "87oui/wordpress",
+  "type": "project",
+  "license": "MIT",
+  "description": "",
+  "config": {
+    "vendor-dir": "public_html/vendor/",
+    "platform": {
+      "php": "8.5.5"
+    },
+    "allow-plugins": {
+      "johnpbloch/wordpress-core-installer": true,
+      "koodimonni/composer-dropin-installer": true,
+      "composer/installers": true
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/87oui/jun"
+    },
+    {
+      "type": "composer",
+      "url": "https://wp-languages.github.io/",
+      "only": [
+        "koodimonni-language/*",
+        "koodimonni-plugin-language/*",
+        "koodimonni-theme-language/*"
+      ]
+    },
+    {
+      "type": "composer",
+      "url": "https://connect.advancedcustomfields.com"
+    }
+  ],
+  "require": {
+    "87oui/jun": "^2.3",
+    "composer/installers": "^2.3.0",
+    "johnpbloch/wordpress": "^6.9.4",
+    "koodimonni-language/core-ja": "^6.9.4",
+    "vlucas/phpdotenv": "^5.6.1",
+    "wpackagist-plugin/cloudsecure-wp-security": "^1.4",
+    "wpackagist-plugin/duplicate-post": "^4.5",
+    "wpackagist-plugin/ewww-image-optimizer": "^8.5.0",
+    "wpackagist-plugin/google-site-kit": "^1.176.0",
+    "wpackagist-plugin/snow-monkey-forms": "^12.1.1",
+    "wpackagist-plugin/wp-mail-smtp": "^4.8.0",
+    "wpackagist-plugin/wp-multibyte-patch": "^2.9",
+    "wpengine/advanced-custom-fields-pro": "^6.7"
+  },
+  "extra": {
+    "wordpress-install-dir": "public_html/wp",
+    "installer-paths": {
+      "plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ],
+      "themes/{$name}/": [
+        "type:wordpress-theme"
+      ]
+    },
+    "dropin-paths": {
+      "public_html/wp/wp-content/languages/": [
+        "vendor:koodimonni-language"
+      ],
+      "public_html/wp/wp-content/languages/plugins/": [
+        "vendor:koodimonni-plugin-language"
+      ],
+      "public_html/wp/wp-content/languages/themes/": [
+        "vendor:koodimonni-theme-language"
+      ]
+    }
+  },
+  "scripts": {
+    "link": [
+      "rm -rf public_html/wp/wp-content/mu-plugins",
+      "ln -s ../../../mu-plugins public_html/wp/wp-content/",
+      "rm -rf public_html/wp/wp-content/themes",
+      "ln -s ../../../themes public_html/wp/wp-content/",
+      "rm -rf public_html/wp/wp-content/plugins",
+      "ln -s ../../../plugins public_html/wp/wp-content/"
+    ],
+    "install-themes-vendor": [
+      "composer install -d themes/jun --no-dev",
+      "if [ -f \"themes/${PROJECT_NAME}/composer.json\" ]; then composer install -d \"themes/${PROJECT_NAME}\" --no-dev; fi"
+    ],
+    "post-install-cmd": [
+      "@link",
+      "@install-themes-vendor"
+    ],
+    "post-update-cmd": [
+      "@install-themes-vendor"
+    ]
+  }
+}

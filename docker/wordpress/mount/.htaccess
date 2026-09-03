@@ -1,0 +1,91 @@
+# セキュリティ対策
+## ディレクトリリスティング、マルチビューの防止
+Options -Indexes -MultiViews
+## ログイン画面のBASIC認証
+# <Files wp-login.php>
+#   AuthUserFile "/path/to/.htpasswd"
+#   AuthName "Restricted Access"
+#   AuthType BASIC
+#   require valid-user
+# </Files>
+## URLの正規化
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  ### HTTPS
+  RewriteCond %{HTTPS} !on
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+  ### スラッシュ重複
+  RewriteCond %{THE_REQUEST} \s[^\s]*//
+  RewriteRule ^ %{REQUEST_URI} [R=301,L,NE]
+  # wp-*ディレクトリの多重ネストリクエストをブロック（内部リダイレクトループ防止）
+  RewriteCond %{REQUEST_URI} wp-(content|admin|includes)/.*wp-(content|admin|includes)/ [NC]
+  RewriteRule .* - [F,L]
+</IfModule>
+## アクセス制限
+### 非公開ファイル
+<FilesMatch "^(wp-config(-sample)?\.php|\.(htaccess|htpasswd)|xmlrpc\.php|\.env|readme\.(html|txt)|license\.txt|php\.ini|composer\.(json|lock)|.+\.(bak|inc|sh|log|sql|tar|gz|zip))$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</FilesMatch>
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_REFERER} !/wp-admin/ [NC]
+  RewriteCond %{REQUEST_URI} !/wp-includes/js/dist/vendor/ [NC]
+  RewriteRule (^|/)vendor(/|$) - [F,L]
+</IfModule>
+### uploadsディレクトリ内の静的ファイル以外
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_URI} ^/wp/wp-content/uploads/ [NC]
+  RewriteCond %{REQUEST_URI} !\.(jpe?g|png|gif|svg|webp|avif|ico|pdf|docx?|xlsx?|pptx?)$ [NC]
+  RewriteRule ^ - [F,L]
+</IfModule>
+### wp-includes内部
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_URI} ^/wp/wp-includes/ [NC]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule .* - [F,L]
+  RewriteRule ^wp/wp-admin/includes/ - [F,L]
+  RewriteRule !^wp/wp-includes/ - [S=3]
+  RewriteRule ^wp/wp-includes/[^/]+\.php$ - [F,L]
+  RewriteRule ^wp/wp-includes/js/tinymce/langs/.+\.php - [F,L]
+  RewriteRule ^wp/wp-includes/theme-compat/ - [F,L]
+</IfModule>
+## レスポンスヘッダー
+<IfModule mod_headers.c>
+  # HSTS（ブラウザにHTTPS接続を強制）
+  Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" "expr=%{HTTPS} == 'on' || %{HTTP:X-Forwarded-Proto} == 'https'"
+  # CSP。upgrade-insecure-requests は実際に HTTPS のときだけ付ける（HTTP のローカルでは TLS がなく ERR_SSL_PROTOCOL_ERROR になる）
+  Header always set Content-Security-Policy "default-src 'self' https: http://localhost:*; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http://localhost:*; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https: http://localhost:*; img-src 'self' https: data: blob: http://localhost:*; font-src 'self' https: data: http://localhost:*; connect-src 'self' https: http://localhost:* ws://localhost:*; frame-src 'self' https: blob:; frame-ancestors 'self';" "expr=%{HTTPS} != 'on' && %{HTTP:X-Forwarded-Proto} != 'https'"
+  Header always set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https:; img-src 'self' https: data: blob:; font-src 'self' https: data:; connect-src 'self' https:; frame-src 'self' https: blob:; frame-ancestors 'self'; upgrade-insecure-requests;" "expr=%{HTTPS} == 'on' || %{HTTP:X-Forwarded-Proto} == 'https'"
+  # ブラウザのMIMEスニッフィング（ファイルの種類を推測する機能）を禁止
+  Header always set X-Content-Type-Options "nosniff"
+  # 他サイトのiframe埋め込みを禁止
+  Header always set X-Frame-Options "SAMEORIGIN"
+  # リファラの制御
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # ブラウザのデバイスAPIへのアクセスを制御
+  Header always set Permissions-Policy "camera=(), microphone=(), payment=(), usb=(), gyroscope=(), magnetometer=()"
+</IfModule>
+
+# BEGIN WordPress
+# "BEGIN WordPress" から "END WordPress" までのディレクティブ (行) は
+# 動的に生成され、WordPress フィルターによってのみ修正が可能です。
+# これらのマーカー間にあるディレクティブへのいかなる変更も上書きされてしまいます。
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress

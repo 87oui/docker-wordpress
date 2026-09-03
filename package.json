@@ -1,17 +1,72 @@
 {
   "name": "87oui-wordpress-docker",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "coding-set",
-  "license": "MIT",
-  "private": true,
+  "type": "module",
   "scripts": {
-    "postinstall": "npm ci --prefix theme",
-    "prepare": "husky install",
-    "start": "npm start --prefix theme"
+    "dev": "run-p vite:watch blocks:watch sharp:watch",
+    "build": "run-s vite:clean blocks sharp",
+    "blocks": "wp-scripts build --webpack-src-dir=src/blocks --output-path=theme/blocks --blocks-manifest",
+    "blocks:watch": "wp-scripts start --webpack-src-dir=src/blocks --output-path=theme/blocks --blocks-manifest",
+    "vite": "vite build",
+    "vite:clean": "vite build --emptyOutDir",
+    "vite:watch": "vite",
+    "sharp": "node scripts/sharp-all.js",
+    "sharp:watch": "node scripts/sharp-watch.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --fix *.js ./src/scripts ./src/blocks",
+    "format": "prettier --write 'src/**/*.{js,ts,tsx,css}' 'theme/views/**/*.twig'",
+    "pull:production": "docker compose exec wordpress sync-wp --production pull",
+    "push:production:theme": "docker compose exec wordpress sync-wp --production push-theme",
+    "push:staging:theme": "docker compose exec wordpress sync-wp --staging push-theme",
+    "deploy:production": "run-s build push:production:theme",
+    "prepare": "husky"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@wordpress/block-editor": "^15.0.0",
+    "@wordpress/blocks": "^15.0.0",
+    "@wordpress/dom-ready": "^4.0.0",
+    "@wordpress/element": "^6.0.0",
+    "@wordpress/hooks": "^4.0.0",
+    "@wordpress/rich-text": "^7.0.0"
+  },
   "devDependencies": {
-    "husky": "^7.0.4",
-    "lint-staged": "^12.3.2"
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^18.3.31",
+    "@types/wordpress__block-editor": "^15.0.6",
+    "@wordpress/scripts": "^34.2.0",
+    "@zackad/prettier-plugin-twig": "^0.17.0",
+    "autoprefixer": "^10.5.4",
+    "chokidar": "^5.0.0",
+    "dotenv": "^17.4.2",
+    "eslint": "^10.9.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "glob": "^13.0.6",
+    "globals": "^17.11.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.4.1",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.5.26",
+    "postcss-import": "^17.0.0",
+    "postcss-url": "^10.1.4",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "sharp": "^0.35.4",
+    "tailwindcss": "^4.3.3",
+    "tsconfig-paths-webpack-plugin": "^4.2.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.68.0",
+    "vite": "^8.2.2",
+    "vite-plugin-dev-manifest": "^1.5.0",
+    "vite-plugin-live-reload": "^3.1.0"
+  },
+  "overrides": {
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    }
   }
 }

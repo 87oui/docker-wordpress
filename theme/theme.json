@@ -1,0 +1,223 @@
+{
+  "$schema": "https://schemas.wp.org/wp/7.1/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "var(--_content-width)",
+      "wideSize": "var(--_content-wide-width)",
+      "allowCustomContentAndWideSize": false,
+      "allowEditing": true
+    },
+    "blockVisibility": {
+      "allowEditing": true
+    },
+    "viewport": {
+      "mobile": "40rem"
+    },
+    "border": {
+      "color": false,
+      "radius": true
+    },
+    "color": {
+      "background": true,
+      "custom": true,
+      "customDuotone": false,
+      "customGradient": false,
+      "defaultDuotone": false,
+      "defaultGradients": false,
+      "defaultPalette": false,
+      "link": false,
+      "text": true,
+      "palette": [
+        {
+          "name": "プライマリカラー",
+          "slug": "primary",
+          "color": "var(--color-primary)"
+        },
+        {
+          "name": "セカンダリカラー",
+          "slug": "secondary",
+          "color": "var(--color-secondary)"
+        },
+        {
+          "name": "ターシャリカラー",
+          "slug": "tertiary",
+          "color": "var(--color-tertiary)"
+        },
+        {
+          "name": "アクセントカラー",
+          "slug": "accent",
+          "color": "var(--color-accent)"
+        },
+        {
+          "name": "背景色",
+          "slug": "background",
+          "color": "var(--color-background)"
+        },
+        {
+          "name": "背景色2",
+          "slug": "background-secondary",
+          "color": "var(--color-background-secondary)"
+        },
+        {
+          "name": "文字色",
+          "slug": "foreground",
+          "color": "var(--color-foreground)"
+        }
+      ]
+    },
+    "spacing": {
+      "padding": true,
+      "margin": true,
+      "blockGap": true,
+      "customSpacingSize": false,
+      "defaultSpacingSizes": false,
+      "spacingSizes": [
+        {
+          "size": "clamp(10px, 1.3cqi, 15px)",
+          "slug": "xs",
+          "name": "10px〜15px"
+        },
+        {
+          "size": "clamp(15px, 1.8cqi, 20px)",
+          "slug": "s",
+          "name": "15px〜20px"
+        },
+        {
+          "size": "clamp(20px, 3.7cqi, 40px)",
+          "slug": "sm",
+          "name": "20px〜40px"
+        },
+        {
+          "size": "clamp(30px, 5.5cqi, 60px)",
+          "slug": "m",
+          "name": "30px〜60px"
+        },
+        {
+          "size": "clamp(40px, 4cqi, 80px)",
+          "slug": "ml",
+          "name": "40px〜65px"
+        },
+        {
+          "size": "clamp(50px, 9.2cqi, 100px)",
+          "slug": "l",
+          "name": "50px〜100px"
+        },
+        {
+          "size": "clamp(80px, 14.8cqi, 160px)",
+          "slug": "xl",
+          "name": "80px〜160px"
+        },
+        {
+          "size": "clamp(100px, 18.5cqi, 200px)",
+          "slug": "xxl",
+          "name": "100px〜200px"
+        }
+      ]
+    },
+    "typography": {
+      "defaultFontSizes": false,
+      "fontSizes": [
+        {
+          "slug": "xs",
+          "name": "極小",
+          "size": "12px",
+          "fluid": { "min": "0.625rem", "max": "0.75rem" }
+        },
+        {
+          "slug": "sm",
+          "name": "小",
+          "size": "14px",
+          "fluid": { "min": "0.75rem", "max": "0.875rem" }
+        },
+        {
+          "slug": "md",
+          "name": "中",
+          "size": "16px",
+          "fluid": { "min": "0.875rem", "max": "1rem" }
+        },
+        {
+          "slug": "lg",
+          "name": "大",
+          "size": "18px",
+          "fluid": { "min": "1.0625rem", "max": "1.125rem" }
+        },
+        {
+          "slug": "xl",
+          "name": "特大",
+          "size": "20px",
+          "fluid": { "min": "1.25rem", "max": "1.25rem" }
+        },
+        {
+          "slug": "4xl",
+          "name": "極大",
+          "size": "28px",
+          "fluid": { "min": "1.625rem", "max": "1.75rem" }
+        },
+        {
+          "slug": "heading-1",
+          "name": "見出し1",
+          "size": "56px",
+          "fluid": { "min": "1.75rem", "max": "3.5rem" }
+        },
+        {
+          "slug": "heading-2",
+          "name": "見出し2",
+          "size": "40px",
+          "fluid": { "min": "1.5rem", "max": "2.5rem" }
+        }
+      ],
+      "fontFamilies": [
+        {
+          "name": "見出し用日本語フォント",
+          "slug": "display-ja",
+          "fontFamily": "var(--font-display-ja)"
+        },
+        {
+          "name": "Heading english font",
+          "slug": "display-en",
+          "fontFamily": "var(--font-display-en)"
+        }
+      ],
+      "lineHeight": true
+    },
+    "blocks": {
+      "core/button": {
+        "border": {
+          "color": false,
+          "radius": false,
+          "width": false
+        },
+        "spacing": {
+          "padding": false
+        }
+      }
+    }
+  },
+  "styles": {
+    "spacing": {
+      "blockGap": "var(--_content-gap)"
+    },
+    "elements": {
+      "link": {
+        "typography": {
+          "textDecoration": null
+        }
+      },
+      "button": {
+        "spacing": {
+          "padding": null
+        },
+        "color": {
+          "background": null,
+          "text": null,
+          "border": null
+        },
+        "typography": {
+          "textTransform": null
+        }
+      }
+    }
+  }
+}
